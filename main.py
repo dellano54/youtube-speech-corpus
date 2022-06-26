@@ -36,7 +36,7 @@ class SubTitles():
 
         options = Options()
         options.headless = True
-        self.driver = webdriver.Firefox(options=options, executable_path=r'geckodriver.exe', service_log_path="log.tmp")
+        self.driver = webdriver.Firefox(options=options, service_log_path="log.tmp")
 
         #get the youtube links from the file
         with open(args.LinkFile, "r") as f:
