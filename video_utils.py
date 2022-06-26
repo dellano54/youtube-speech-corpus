@@ -1,7 +1,6 @@
 from pytube import YouTube
 import os
 from pydub import AudioSegment
-import os
 
 Path = os.path.join(
     os.getcwd(),
