@@ -3,6 +3,7 @@ import wget
 import zipfile
 import subprocess
 import shutil
+import tarfile
 
 try:
     os.mkdir("bin", mode=777)
@@ -21,8 +22,10 @@ if os.name == 'posix':
         "https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-linux64.tar.gz"
     )
     os.rename(filename, 'gecko.zip')
-    archive = zipfile.ZipFile('gecko.zip')
+    archive = tarfile.open('gecko.zip')
     archive.extractall('bin/')
+
+    archive.close()
 
 
 elif os.name == 'nt':
