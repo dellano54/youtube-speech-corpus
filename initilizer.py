@@ -12,7 +12,7 @@ try:
 except FileExistsError:
     pass
 
-if os.name == 'postix':
+if os.name == 'posix':
     subprocess.call(['apt', 'install', 'ffmpeg', 'firefox', '-y'], 
     stdout=subprocess.DEVNULL,
     stderr=subprocess.STDOUT)
