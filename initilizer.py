@@ -3,7 +3,6 @@ import wget
 import zipfile
 import subprocess
 import shutil
-import tarfile
 
 try:
     os.mkdir("bin", mode=777)
@@ -14,19 +13,15 @@ except FileExistsError:
     pass
 
 if os.name == 'posix':
-    subprocess.call(['apt', 'install', 'ffmpeg', 'firefox', '-y'], 
+    subprocess.call(['apt', 'install', 'ffmpeg', 'firefox', 'firefox-geckodriver', '-y'], 
     stdout=subprocess.DEVNULL,
     stderr=subprocess.STDOUT)
-    
-    filename = wget.download(
-        "https://github.com/mozilla/geckodriver/releases/download/v0.31.0/geckodriver-v0.31.0-linux64.tar.gz"
-    )
-    os.rename(filename, 'gecko.zip')
-    archive = tarfile.open('gecko.zip')
-    archive.extractall('bin/')
 
-    archive.close()
-
+    subprocess.call([
+        'cp', '/usr/lib/geckodriver', '/usr/bin'
+    ],
+    stdout=subprocess.DEVNULL,
+    stderr=subprocess.STDOUT)
 
 elif os.name == 'nt':
     filename = wget.download(
