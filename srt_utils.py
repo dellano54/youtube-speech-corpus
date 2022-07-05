@@ -1,7 +1,10 @@
 import requests
 from collections import deque
 import json
-import time
+from selenium.common import exceptions
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.wait import WebDriverWait
 
 #check status
 def check_status(response):
@@ -26,8 +29,13 @@ def getSRT(link: dict, driver):
     url = f"https://www.downloadyoutubesubtitles.com/?u={link['url']}"
     
     driver.get(url)
-    time.sleep(0.5)
 
+    try:
+        WebDriverWait(driver, 5
+            ).until_not(EC.presence_of_element_located((By.ID, "loader-ani")))
+
+    except exceptions.TimeoutException:
+        pass
     
     url = f"https://www.downloadyoutubesubtitles.com/get2.php?i={link['id']}&format=srt&hl=a.en&a=&removeTags=1"
     response = requests.get(url)

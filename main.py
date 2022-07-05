@@ -1,3 +1,17 @@
+'''
+Author: Dellano Samuel Fernandez
+Date: 2.07.2022
+Name: yt-speech-Corpus
+Desc: For generating speech to text data from youtube using youtube's auto speech-text
+      AI to train a much powerful AI capable of generating correct speech-to-text predictions
+      with reduction in WER (Word Error Rate) and low time complexity curently the 
+      speech-2-text-medium transformer model takes about 0.6 sec for the transcription of 12 sec audio
+      Currently i dont have enough computational power to run this but i hope someday i will run this 
+      and train a open source model which can perform or even out perform commercial google 
+      speech-to-text model
+
+'''
+
 import srt_utils
 import video_utils
 from termcolor import colored
@@ -7,7 +21,7 @@ from argparse import ArgumentParser
 from requests.utils import unquote
 import os
 from tqdm import tqdm
-import threading
+from threading import Thread as Process
 from collections import deque
 
 parser = ArgumentParser()
@@ -36,7 +50,7 @@ class SubTitles():
 
         options = Options()
         options.headless = True
-        self.driver = webdriver.Firefox(options=options, service_log_path="log.tmp")
+        self.driver = webdriver.Firefox(options=options, executable_path=r'geckodriver.exe', service_log_path="log.tmp")
 
         #get the youtube links from the file
         with open(args.LinkFile, "r") as f:
@@ -135,12 +149,15 @@ class SubTitles():
             Downpath
         )
 
+        '''
+
         print(
             colored(
                 f"\n[info] [{idx}] completed downloading video Files",
                 color='green'
             )
         )
+        '''
 
         self._cutAudios(Downpath,
                         path,
@@ -157,12 +174,16 @@ class SubTitles():
             )
         )
 
+        '''
+
         print(
             colored(
                 f'\n[info] completed processing {idx} batch',
                 color='green'
             )
         )
+
+        '''
 
 class Workers():
     def __init__(self, sub):
@@ -177,7 +198,7 @@ class Workers():
 
         for i in range(len(self.sub)):
 
-            process = threading.Thread(
+            process = Process(
                 target=self._getValue,
                 args=(i, ),
                 name=str(i),
@@ -203,6 +224,6 @@ class Workers():
 #initilizing class
 sub = SubTitles("YT-CORPUS")
 
-#using threading for multiprocesses
+#using threading for multithread processing
 threadWorker = Workers(sub)
 threadWorker.run()

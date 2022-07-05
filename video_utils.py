@@ -1,6 +1,8 @@
 from pytube import YouTube
 import os
 from pydub import AudioSegment
+import os
+
 
 Path = os.path.join(
     os.getcwd(),
@@ -21,7 +23,6 @@ def DownloadAudio(url:str, saveFileName: str):
     except FileExistsError:
         os.remove(f"{saveFileName}.mp3")
         os.rename(out_file, f"{saveFileName}.mp3")
-
 
 def cutAudio(FileName: str, outFile: str, startSec: int, endSec: int):
     startTime = startSec*1000
