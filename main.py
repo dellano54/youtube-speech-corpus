@@ -79,8 +79,7 @@ class SubTitles():
         except FileExistsError:
             pass
 
-        with tqdm(total=len(data), position=idx, desc=f"Cutting Files From {idx}") as pbar:
-            for i in data:
+            for i in tqdm(data, desc=f"Cutting Files From {idx}", position=idx):
                 Audid, startTime, endTime, _ = i.values()
 
                 outFileName = os.path.join(
@@ -96,7 +95,6 @@ class SubTitles():
                     endTime
                 )
 
-                pbar.update(1)
 
 
 
