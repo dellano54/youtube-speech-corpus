@@ -1,4 +1,5 @@
 import os
+from numpy import std
 import wget
 import zipfile
 import subprocess
@@ -20,6 +21,10 @@ if os.name == 'posix':
     subprocess.call([
         'cp', '/usr/lib/geckodriver', '/usr/bin'
     ],
+    stdout=subprocess.DEVNULL,
+    stderr=subprocess.STDOUT)
+
+    subprocess.call(['cp', '/usr/lib/geckodriver', '/usr/bin'],
     stdout=subprocess.DEVNULL,
     stderr=subprocess.STDOUT)
 

@@ -1,7 +1,7 @@
+from fileinput import filename
 from pytube import YouTube
 import os
-from pydub import AudioSegment
-import os
+import subprocess
 
 
 Path = os.path.join(
@@ -25,13 +25,14 @@ def DownloadAudio(url:str, saveFileName: str):
         os.rename(out_file, f"{saveFileName}.mp3")
 
 def cutAudio(FileName: str, outFile: str, startSec: int, endSec: int):
-    startTime = startSec*1000
-    endTime = endSec*1000
+    out = subprocess.call(
+        ['ffmpeg', '-i', FileName, '-s', startSec, '-t', endSec-startSec, outFile]
+    ,stdout=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
+    shell=True
+    )
 
-    song = AudioSegment.from_file(f"{FileName}.mp3")
-    song = song[startTime:endTime]
-
-    song.export(f"{outFile}.mp3", format='mp3')
-
+    with open("ffmpeg.log", "a") as f:
+        f.write(f"\n{out[0]}")
 
 

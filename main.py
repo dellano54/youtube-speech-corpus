@@ -21,8 +21,7 @@ from argparse import ArgumentParser
 from requests.utils import unquote
 import os
 from tqdm import tqdm
-from threading import Thread as Process
-from collections import deque
+from multiprocessing import Pool
 
 parser = ArgumentParser()
 
@@ -50,7 +49,7 @@ class SubTitles():
 
         options = Options()
         options.headless = True
-        self.driver = webdriver.Firefox(options=options, executable_path=r'geckodriver.exe', service_log_path="log.tmp")
+        self.driver = webdriver.Firefox(options=options, service_log_path="log.tmp")
 
         #get the youtube links from the file
         with open(args.LinkFile, "r") as f:
@@ -80,22 +79,24 @@ class SubTitles():
         except FileExistsError:
             pass
 
+        with tqdm(total=len(data), position=idx, desc=f"Cutting Files From {idx}") as pbar:
+            for i in data:
+                Audid, startTime, endTime, _ = i.values()
 
-        for i in tqdm(data, desc=f"Cutting Files From {idx}"):
-            Audid, startTime, endTime, _ = i.values()
+                outFileName = os.path.join(
+                    AudioPath,
+                    "Audio",
+                    str(Audid)
+                )
 
-            outFileName = os.path.join(
-                AudioPath,
-                "Audio",
-                str(Audid)
-            )
+                video_utils.cutAudio(
+                    DownPath,
+                    outFileName,
+                    startTime,
+                    endTime
+                )
 
-            video_utils.cutAudio(
-                DownPath,
-                outFileName,
-                startTime,
-                endTime
-            )
+                pbar.update(1)
 
 
 
@@ -185,45 +186,14 @@ class SubTitles():
 
         '''
 
-class Workers():
-    def __init__(self, sub):
-        self.sub = sub
-        self.threads = self._CreateProcesses()
 
-    def _getValue(self, idx):
-        self.sub[idx]
-
-    def _CreateProcesses(self):
-        threads = deque([])
-
-        for i in range(len(self.sub)):
-
-            process = Process(
-                target=self._getValue,
-                args=(i, ),
-                name=str(i),
-                daemon=True
-            )
-
-            threads.append(
-                process
-            )
-
-        return threads
-
-    def run(self):
-        #start the threads
-        for thread in self.threads:
-            thread.start()
-
-        #wait till all the threads are completed
-        for thread in self.threads:
-            thread.join()
+def get_values(idx):
+    sub[idx]
 
 
 #initilizing class
 sub = SubTitles("YT-CORPUS")
 
 #using threading for multithread processing
-threadWorker = Workers(sub)
-threadWorker.run()
+with Pool(5) as p:
+    p.map(get_values, range(len(sub)))
