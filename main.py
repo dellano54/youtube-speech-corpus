@@ -197,3 +197,5 @@ sub = SubTitles("YT-CORPUS")
 #using threading for multithread processing
 with Pool(5) as p:
     p.map(get_values, range(len(sub)))
+    p.close()
+    p.join()
