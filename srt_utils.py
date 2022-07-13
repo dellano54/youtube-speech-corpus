@@ -5,11 +5,15 @@ from selenium.common import exceptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+import time
 
 #check status
-def check_status(response):
+def check_status(response, url):
     if response.status_code != 200:
-        raise requests.exceptions.RequestException(response.text)
+        time.sleep(2)
+        response = requests.get(url)
+        if response.status_code != 200:
+            raise requests.exceptions.RequestException(response.text)
 
 #encode the links
 def encodeLinks(urls: list):
@@ -39,7 +43,7 @@ def getSRT(link: dict, driver):
     
     url = f"https://www.downloadyoutubesubtitles.com/get2.php?i={link['id']}&format=srt&hl=a.en&a=&removeTags=1"
     response = requests.get(url)
-    check_status(response)
+    check_status(response, url)
 
     content = response.text.replace("\n\n\n", "@@@").replace("\n", "").replace("@@@", "\n").replace("\r", "\n").rstrip().split("\n\n")
 

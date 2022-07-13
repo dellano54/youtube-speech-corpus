@@ -25,14 +25,10 @@ def DownloadAudio(url:str, saveFileName: str):
         os.rename(out_file, f"{saveFileName}.mp3")
 
 def cutAudio(FileName: str, outFile: str, startSec: int, endSec: int):
-    out = subprocess.call(
-        ['ffmpeg', '-i', FileName, '-s', startSec, '-t', endSec-startSec, outFile]
-    ,stdout=subprocess.PIPE,
-    stderr=subprocess.STDOUT,
-    shell=True
-    )
-
     with open("ffmpeg.log", "a") as f:
-        f.write(f"\n{out[0]}")
+        subprocess.call(
+            ['ffmpeg', '-i', FileName+".mp3", '-s', str(startSec), '-t', str(endSec-startSec), outFile+".mp3"]
+        , stdout=f,
+        stderr=subprocess.STDOUT)
 
 
