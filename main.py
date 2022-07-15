@@ -114,7 +114,7 @@ class SubTitles():
             srt_utils.getSRT(
                 data,
                 self.driver,
-                args.en
+                args.english
             )
         )
 
