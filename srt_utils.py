@@ -29,7 +29,7 @@ def encodeLinks(urls: list):
     return out
 
 #get the subtitles
-def getSRT(link: dict, driver):
+def getSRT(link: dict, driver, en=False):
     url = f"https://www.downloadyoutubesubtitles.com/?u={link['url']}"
     
     driver.get(url)
@@ -41,7 +41,10 @@ def getSRT(link: dict, driver):
     except exceptions.TimeoutException:
         pass
     
-    url = f"https://www.downloadyoutubesubtitles.com/get2.php?i={link['id']}&format=srt&hl=a.en&a=&removeTags=1"
+    if en:
+        url = f"https://www.downloadyoutubesubtitles.com/get2.php?i={link['id']}&format=srt&hl=en&a=&removeTags=1"
+    else:
+        url = f"https://www.downloadyoutubesubtitles.com/get2.php?i={link['id']}&format=srt&hl=a.en&a=&removeTags=1"
     response = requests.get(url)
     check_status(response, url)
 

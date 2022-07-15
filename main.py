@@ -26,6 +26,7 @@ from multiprocessing import Pool
 parser = ArgumentParser()
 
 parser.add_argument("LinkFile", type=str, help="file which contains the links")
+parser.add_argument("-en", "--english", action="store_true", help="get english subtitiles instead of auto generated")
 
 args = parser.parse_args()
 
@@ -112,7 +113,8 @@ class SubTitles():
         data = srt_utils.SerializeSRT(
             srt_utils.getSRT(
                 data,
-                self.driver
+                self.driver,
+                args.en
             )
         )
 
